@@ -3,44 +3,112 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Support, Skypainter</title>
-    <meta name="description" content="Support and contact for Skypainter." />
+    <title>Support — Skypainter</title>
+    <meta name="description" content="Support and contact for Skypainter on iOS." />
+    <link rel="canonical" href="https://skypainter.f-90.co.uk/support/" />
+    <link rel="icon" href="../assets/app-icon-64.png" type="image/png" />
+    <link rel="apple-touch-icon" href="../assets/app-icon-256.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <a class="brand" href="../">Skypainter</a>
-        <nav>
+    <header class="siteHeader">
+      <div class="frame">
+        <a class="brand" href="../">
+          <img
+            class="brandIcon"
+            src="../assets/app-icon-256.png"
+            width="256"
+            height="256"
+            alt=""
+          />
+          <span class="brandName">Skypainter</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="./" aria-current="page">Support</a>
+          <a href="../privacy/">Privacy</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="doc">
+        <h1>Support</h1>
+        <p>
+          Skypainter needs iOS 26 on iPhone or iPad. Paintings are stored on
+          the device. Deleting the app deletes that library.
+        </p>
+
+        <div class="actions">
+          <a
+            class="button"
+            href="mailto:archgrovehouse@gmail.com?subject=Skypainter%20support"
+          >
+            Email support
+          </a>
+          <a class="button secondary" href="../privacy/">Privacy Policy</a>
+        </div>
+
+        <h2>Orbit</h2>
+        <p>
+          While a finger is down, the line draws. Direction is from the centre
+          of the screen toward your finger, and distance from the centre sets
+          the speed. Lift your finger and the stroke coasts to a stop. As you
+          push toward the edges and speed up, the camera pulls back. Pinch in
+          to sculpt the globe, and pinch back out to paint the sky.
+        </p>
+
+        <h2>Free</h2>
+        <p>
+          Free drawings are open space. Tilt the phone to aim the camera. The
+          brush follows the view plane.
+        </p>
+
+        <h2>Export</h2>
+        <p>
+          The share button opens the system share sheet with a still of the
+          current view. Saving to Photos asks permission the first time. You
+          can change that later in Settings → Skypainter → Photos.
+        </p>
+
+        <h2>Where are paintings stored?</h2>
+        <p>
+          The library lives in the app’s documents on your device. Skypainter
+          does not upload paintings. Export anything you want to keep before
+          you delete the app.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          <a href="mailto:archgrovehouse@gmail.com">archgrovehouse@gmail.com</a>
+          <br />
+          Include your device model and iOS version. We aim to reply within a
+          few days.
+        </p>
+      </article>
+    </main>
+
+    <footer class="siteFooter">
+      <div class="frame">
+        <div>
+          <p>A drawing app for iPhone and iPad. Needs iOS 26.</p>
+          <p>
+            A product from
+            <a href="https://f-90.co.uk">f-90</a>
+          </p>
+          <p>© <span id="y"></span> Skypainter</p>
+        </div>
+        <nav class="footerLinks" aria-label="Legal">
           <a href="./">Support</a>
           <a href="../privacy/">Privacy</a>
         </nav>
-      </header>
-      <main class="card">
-        <h1>Support</h1>
-        <p>
-          Skypainter needs iOS 26. Paintings are stored on the iPhone. Deleting
-          the app deletes that library.
-        </p>
-        <h2>Drawing</h2>
-        <p>
-          Press and drag to steer. How far you move from where you started sets
-          the speed. Lift your finger and the stroke coasts to a stop. Pinch in
-          to sculpt the globe, and pinch back out to paint the sky.
-        </p>
-        <h2>Export</h2>
-        <p>
-          The share button saves a still of the current view. The first time,
-          iOS asks permission to add photos. You can change that later in
-          Settings → Skypainter → Photos.
-        </p>
-        <h2>Contact</h2>
-        <p>
-          Email
-          <a href="mailto:archgrovehouse@gmail.com">archgrovehouse@gmail.com</a>
-          and include your iPhone model and iOS version.
-        </p>
-      </main>
-    </div>
+      </div>
+    </footer>
+    <script src="../site.js"></script>
   </body>
 </html>

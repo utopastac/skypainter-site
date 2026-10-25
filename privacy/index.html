@@ -3,33 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Privacy Policy, Skypainter</title>
-    <meta name="description" content="Privacy policy for Skypainter." />
+    <title>Privacy Policy — Skypainter</title>
+    <meta name="description" content="Privacy policy for Skypainter on iOS." />
+    <link rel="canonical" href="https://skypainter.f-90.co.uk/privacy/" />
+    <link rel="icon" href="../assets/app-icon-64.png" type="image/png" />
+    <link rel="apple-touch-icon" href="../assets/app-icon-256.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <a class="brand" href="../">Skypainter</a>
-        <nav>
+    <header class="siteHeader">
+      <div class="frame">
+        <a class="brand" href="../">
+          <img
+            class="brandIcon"
+            src="../assets/app-icon-256.png"
+            width="256"
+            height="256"
+            alt=""
+          />
+          <span class="brandName">Skypainter</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
           <a href="../support/">Support</a>
-          <a href="./">Privacy</a>
+          <a href="./" aria-current="page">Privacy</a>
         </nav>
-      </header>
-      <main class="card">
+      </div>
+    </header>
+
+    <main>
+      <article class="doc">
         <h1>Privacy Policy</h1>
         <p class="meta">Last updated: 25 October 2026</p>
         <p>
-          Skypainter (“Skypainter”, “we”, “us”) is a drawing app for iPhone.
-          This policy explains what the app handles and what it does not.
+          Skypainter (“Skypainter”, “we”, “us”) is a drawing app for iPhone and
+          iPad. This policy explains what the app handles and what it does not.
         </p>
+
         <h2>Summary</h2>
         <p>
           Skypainter does not require an account, does not sell personal data,
-          and does not include advertising or analytics. Paintings and settings
-          stay on your iPhone. We do not operate a server that receives your
-          drawings.
+          and does not include advertising or third-party analytics. Paintings
+          and settings stay on your device. We do not operate a server that
+          receives your drawings.
         </p>
+
         <h2>Information on your device</h2>
         <ul>
           <li>
@@ -38,32 +61,77 @@
           </li>
           <li>
             <strong>Settings.</strong> Brush, camera, and look preferences are
-            stored on your device so they are still there the next time you open
-            the app.
+            stored on your device so they are still there the next time you
+            open the app.
           </li>
           <li>
-            <strong>Photos.</strong> If you export a still, iOS asks permission
-            to add that image to your photo library. The app only writes the
-            picture you export. It does not read the rest of your library.
+            <strong>Motion.</strong> In a Free drawing, the app reads device
+            tilt to aim the camera. That reading stays on the device. It is not
+            saved or sent anywhere.
+          </li>
+          <li>
+            <strong>Exports.</strong> The share button opens the system share
+            sheet with a still of the current view. The picture leaves the app
+            only if you choose to save or send it. If you save it to Photos,
+            iOS asks permission to add that image. The app does not read the
+            rest of your photo library.
           </li>
         </ul>
-        <h2>What we do not do</h2>
+
+        <h2>What we do not collect</h2>
+        <ul>
+          <li>No account registration or login.</li>
+          <li>No contact information, location, or advertising identifiers.</li>
+          <li>No third-party analytics or crash-reporting SDKs from us.</li>
+          <li>No tracking across other companies’ apps or websites.</li>
+          <li>No cloud library operated by Skypainter.</li>
+        </ul>
+
+        <h2>Apple and the operating system</h2>
         <p>
-          We do not collect contact information, location, identifiers for
-          advertising, or usage analytics. We do not track you across other
-          companies’ apps or websites.
+          Apple may collect diagnostic or usage information according to your
+          device settings and Apple’s own privacy policy, for example if you
+          have opted in to Share iPhone Analytics or App Store diagnostics.
+          That processing is controlled by Apple, not by Skypainter.
         </p>
+
         <h2>Children</h2>
         <p>
-          Skypainter is not directed at collecting personal information from
+          Skypainter does not knowingly collect personal information from
           children. The app does not ask for an account.
         </p>
+
+        <h2>Changes</h2>
+        <p>
+          We may update this policy if the app’s behaviour changes. The “Last
+          updated” date at the top will change when we do.
+        </p>
+
         <h2>Contact</h2>
         <p>
           Questions about this policy:
           <a href="mailto:archgrovehouse@gmail.com">archgrovehouse@gmail.com</a>.
+          You can also visit <a href="../support/">Support</a>.
         </p>
-      </main>
-    </div>
+      </article>
+    </main>
+
+    <footer class="siteFooter">
+      <div class="frame">
+        <div>
+          <p>A drawing app for iPhone and iPad. Needs iOS 26.</p>
+          <p>
+            A product from
+            <a href="https://f-90.co.uk">f-90</a>
+          </p>
+          <p>© <span id="y"></span> Skypainter</p>
+        </div>
+        <nav class="footerLinks" aria-label="Legal">
+          <a href="../support/">Support</a>
+          <a href="./">Privacy</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="../site.js"></script>
   </body>
 </html>

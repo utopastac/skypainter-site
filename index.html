@@ -4,26 +4,99 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Skypainter</title>
-    <meta name="description" content="Skypainter is a drawing app for painting light across a sky and a globe." />
-    <link rel="stylesheet" href="styles.css" />
+    <meta
+      name="description"
+      content="Skypainter is a drawing app for painting light across a sky and a globe."
+    />
+    <link rel="canonical" href="https://skypainter.f-90.co.uk/" />
+    <link rel="icon" href="./assets/app-icon-64.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/app-icon-256.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <a class="brand" href="./">Skypainter</a>
-        <nav>
-          <a href="support/">Support</a>
-          <a href="privacy/">Privacy</a>
+    <header class="siteHeader">
+      <div class="frame">
+        <a class="brand" href="./">
+          <img
+            class="brandIcon"
+            src="./assets/app-icon-256.png"
+            width="256"
+            height="256"
+            alt=""
+          />
+          <span class="brandName">Skypainter</span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="./support/">Support</a>
+          <a href="./privacy/">Privacy</a>
         </nav>
-      </header>
-      <main class="card">
-        <h1>Paint a sky you can orbit.</h1>
-        <p class="lede">
-          Skypainter is an iPhone drawing app. Steer a stroke across the sky,
-          pinch in to sculpt the globe, and keep every painting on your device.
-        </p>
-        <p>No account. Nothing is uploaded unless you export a photo yourself.</p>
-      </main>
-    </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="frame">
+          <p class="eyebrow">Drawing for iOS</p>
+          <h1>Paint a sky you can orbit.</h1>
+          <p class="lede">
+            Skypainter is a drawing app for painting light across a sky and a
+            globe. No account. Paintings stay on your device.
+          </p>
+        </div>
+      </section>
+
+      <section class="points" aria-label="What the app does">
+        <div class="frame">
+          <ul>
+            <li>
+              <h2>Steer</h2>
+              <p>
+                Direction follows your finger from the centre of the screen.
+                How far you press sets the speed, and the stroke coasts when
+                you lift.
+              </p>
+            </li>
+            <li>
+              <h2>Sculpt</h2>
+              <p>
+                Pinch in to shape the globe, then pinch back out to paint the
+                sky. Change the brush, colour, material, light, and sky.
+              </p>
+            </li>
+            <li>
+              <h2>Keep</h2>
+              <p>
+                The library stays on the device. Share a still when you want a
+                picture outside the app.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="siteFooter">
+      <div class="frame">
+        <div>
+          <p>A drawing app for iPhone and iPad. Needs iOS 26.</p>
+          <p>
+            A product from
+            <a href="https://f-90.co.uk">f-90</a>
+          </p>
+          <p>© <span id="y"></span> Skypainter</p>
+        </div>
+        <nav class="footerLinks" aria-label="Legal">
+          <a href="./support/">Support</a>
+          <a href="./privacy/">Privacy</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="./site.js"></script>
   </body>
 </html>
