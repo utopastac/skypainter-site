@@ -1,0 +1,231 @@
+/* Home page. Colours follow the app: dawn on the create screen, cobalt in the paint space. */
+
+body.home {
+  --ink: #2c1c16;
+  --muted: #5a3b32;
+  --line: color-mix(in srgb, #f6ebe4 22%, transparent);
+  --dawn-top: #d6a37c;
+  --dawn-bottom: #7a4e4c;
+  --cream: #faf6f0;
+  --editor-sky: #10245c;
+  --editor-ink: #f4efe8;
+  --editor-muted: #c5d0ea;
+  background: var(--dawn-bottom);
+  color: var(--ink);
+
+  & a:hover {
+    color: var(--ink);
+  }
+
+  & .siteHeader {
+    position: absolute;
+    inset: 0 0 auto;
+    background: transparent;
+    backdrop-filter: none;
+
+    & .brand,
+    & .nav a {
+      color: var(--ink);
+    }
+
+    & .nav a:hover {
+      color: var(--ink);
+    }
+  }
+
+  & .siteFooter {
+    background: var(--dawn-bottom);
+    border-top-color: var(--line);
+    color: var(--cream);
+
+    & p,
+    & a {
+      color: color-mix(in srgb, var(--cream) 78%, transparent);
+    }
+
+    & a:hover {
+      color: var(--cream);
+    }
+  }
+}
+
+.stage {
+  min-height: 100svh;
+  background: linear-gradient(
+    180deg,
+    #d6a37c 0%,
+    #cd8b6a 10%,
+    #c07e64 22%,
+    #b97861 36%,
+    #af725e 50%,
+    #a6776c 62%,
+    #945e54 76%,
+    #8b5752 86%,
+    #82524f 94%,
+    #7a4e4c 100%
+  );
+}
+
+.stageLayout {
+  display: grid;
+  grid-template-rows: auto minmax(14rem, 1fr) auto;
+  align-items: center;
+  width: min(100%, 76rem);
+  min-height: 100svh;
+  margin-inline: auto;
+  padding: calc(5.25rem + var(--space-s)) var(--page-pad) var(--space-xl);
+}
+
+.logotype {
+  margin: 0 auto;
+  width: min(78vw, 28rem);
+
+  & img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 14px rgb(74 32 24 / 12%));
+  }
+}
+
+.worlds {
+  position: relative;
+  min-height: 16rem;
+  height: 100%;
+
+  & canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+.stageLine {
+  margin: 0 auto;
+  max-width: 16rem;
+  color: var(--cream);
+  font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+  font-weight: 560;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.editor {
+  background:
+    radial-gradient(90% 70% at 70% 40%, color-mix(in srgb, #2a4ec4 55%, transparent), transparent 60%),
+    linear-gradient(180deg, #163087 0%, var(--editor-sky) 40%, #0d1c48 100%);
+  color: var(--editor-ink);
+  padding-block: var(--space-3xl);
+
+  & .eyebrow {
+    color: #f3c2a0;
+  }
+
+  & h2 {
+    margin: 0 0 var(--space-m);
+    max-width: 12ch;
+    color: var(--editor-ink);
+    font-size: clamp(2.1rem, 4.4vw, 3.3rem);
+    font-weight: 560;
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+  }
+
+  & p {
+    margin: 0 0 var(--space-m);
+    max-width: 34rem;
+    color: var(--editor-muted);
+  }
+
+  & p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.editorLayout {
+  display: grid;
+  align-items: center;
+  gap: var(--space-xl);
+
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-2xl);
+  }
+}
+
+.screen {
+  margin: 0;
+
+  & img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: min(72svh, 40rem);
+    margin-inline: auto;
+    border-radius: 1.75rem;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, white 16%, transparent),
+      0 28px 50px rgb(8 10 24 / 35%);
+  }
+}
+
+.editor .screen {
+  justify-self: center;
+
+  @media (min-width: 64rem) {
+    justify-self: end;
+
+    & img {
+      max-height: min(82svh, 46rem);
+    }
+  }
+}
+
+.kept {
+  background: var(--dawn-bottom);
+  color: var(--cream);
+  padding-block: var(--space-3xl);
+
+  & h2 {
+    margin: var(--space-l) 0 var(--space-s);
+    font-size: clamp(1.55rem, 2.6vw, 2.05rem);
+    font-weight: 560;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+
+  & p {
+    margin: 0;
+    max-width: 24rem;
+    color: color-mix(in srgb, var(--cream) 80%, transparent);
+  }
+
+  & article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  & .screen img {
+    max-height: min(64svh, 34rem);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, white 14%, transparent),
+      0 24px 40px rgb(40 16 14 / 28%);
+  }
+}
+
+.keptGrid {
+  display: grid;
+  gap: var(--space-3xl);
+
+  @media (min-width: 52rem) {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: var(--space-xl);
+  }
+}

@@ -18,8 +18,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./home.css" />
   </head>
-  <body>
+  <body class="home">
     <header class="siteHeader">
       <div class="frame">
         <a class="brand" href="./">
@@ -40,43 +41,86 @@
     </header>
 
     <main>
-      <section class="hero">
-        <div class="frame">
-          <p class="eyebrow">Drawing for iOS</p>
-          <h1>Paint a sky you can orbit.</h1>
-          <p class="lede">
-            Skypainter is a drawing app for painting light across a sky and a
-            globe. No account. Paintings stay on your device.
+      <section class="stage" aria-label="Skypainter">
+        <div class="stageLayout">
+          <h1 class="logotype">
+            <img
+              src="./assets/logotype.svg"
+              width="2080"
+              height="685"
+              alt="Skypainter"
+            />
+          </h1>
+          <div class="worlds">
+            <canvas id="worlds" aria-hidden="true"></canvas>
+          </div>
+          <p class="stageLine">
+            A globe, a cube, or a pyramid. Paint the sky around it.
           </p>
         </div>
       </section>
 
-      <section class="points" aria-label="What the app does">
-        <div class="frame">
-          <ul>
-            <li>
-              <h2>Steer</h2>
-              <p>
-                Direction follows your finger from the centre of the screen.
-                How far you press sets the speed, and the stroke coasts when
-                you lift.
-              </p>
-            </li>
-            <li>
-              <h2>Sculpt</h2>
-              <p>
-                Pinch in to shape the globe, then pinch back out to paint the
-                sky. Change the brush, colour, material, light, and sky.
-              </p>
-            </li>
-            <li>
-              <h2>Keep</h2>
-              <p>
-                The library stays on the device. Share a still when you want a
-                picture outside the app.
-              </p>
-            </li>
-          </ul>
+      <section class="editor" aria-labelledby="draw-heading">
+        <div class="frame editorLayout">
+          <div class="editorCopy">
+            <p class="eyebrow">Orbit</p>
+            <h2 id="draw-heading">Draw across the sky.</h2>
+            <p>
+              Direction follows your finger from the centre of the screen. How
+              far you press sets the speed, and the stroke coasts when you
+              lift. Push toward the edge and the camera pulls back.
+            </p>
+            <p>
+              Pinch in to sculpt the world, then pinch back out to paint. In a
+              free drawing, tilt the phone to aim. Brushes run from a pen and a
+              ribbon to clouds, stars, planets, and aurora.
+            </p>
+          </div>
+          <figure class="screen">
+            <img
+              src="./assets/editor.jpg"
+              width="1000"
+              height="2173"
+              alt="Ribbon strokes in mint, pink, blue, and orange wrapped around a sculpted globe. The brush is set to Ribbon."
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section class="kept" aria-label="Library and look">
+        <div class="frame keptGrid">
+          <article>
+            <figure class="screen">
+              <img
+                src="./assets/library.jpg"
+                width="1000"
+                height="2173"
+                alt="The library. A painting titled First Light shows three crossing strokes on a dark sky."
+                decoding="async"
+              />
+            </figure>
+            <h2>Every painting, saved.</h2>
+            <p>
+              The library stays on the device. No account. Share a still when
+              you want a picture outside the app.
+            </p>
+          </article>
+          <article>
+            <figure class="screen">
+              <img
+                src="./assets/look.jpg"
+                width="1000"
+                height="2173"
+                alt="The Look panel open over a painting, with field of view, depth blur, and fisheye."
+                decoding="async"
+              />
+            </figure>
+            <h2>Sky, finish, and glow.</h2>
+            <p>
+              Field of view, depth blur, and fisheye. Change the colour, the
+              material, the light, and the sky.
+            </p>
+          </article>
         </div>
       </section>
     </main>
