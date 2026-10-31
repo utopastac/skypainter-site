@@ -9,118 +9,24 @@
       content="Skypainter is a drawing app for painting light across a sky and a globe."
     />
     <link rel="canonical" href="https://skypainter.f-90.co.uk/" />
-    <link rel="icon" href="./assets/app-icon-64.png" type="image/png" />
-    <link rel="apple-touch-icon" href="./assets/app-icon-256.png" />
+    <link rel="icon" href="./assets/app-icon-64.png?v=2" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/app-icon-256.png?v=2" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./home.css" />
+    <link rel="stylesheet" href="./home.css?v=11" />
   </head>
   <body class="home">
-    <header class="siteHeader">
-      <div class="frame">
-        <a class="brand" href="./">
-          <img
-            class="brandIcon"
-            src="./assets/app-icon-256.png"
-            width="256"
-            height="256"
-            alt=""
-          />
-          <span class="brandName">Skypainter</span>
-        </a>
-        <nav class="nav" aria-label="Primary">
-          <a href="./support/">Support</a>
-          <a href="./privacy/">Privacy</a>
-        </nav>
-      </div>
-    </header>
-
     <main>
       <section class="stage" aria-label="Skypainter">
-        <div class="stageLayout">
-          <h1 class="logotype">
-            <img
-              src="./assets/logotype.svg"
-              width="2080"
-              height="685"
-              alt="Skypainter"
-            />
-          </h1>
-          <div class="worlds">
-            <canvas id="worlds" aria-hidden="true"></canvas>
-          </div>
-          <p class="stageLine">
-            A globe, a cube, or a pyramid. Paint the sky around it.
-          </p>
-        </div>
-      </section>
-
-      <section class="editor" aria-labelledby="draw-heading">
-        <div class="frame editorLayout">
-          <div class="editorCopy">
-            <p class="eyebrow">Orbit</p>
-            <h2 id="draw-heading">Draw across the sky.</h2>
-            <p>
-              Direction follows your finger from the centre of the screen. How
-              far you press sets the speed, and the stroke coasts when you
-              lift. Push toward the edge and the camera pulls back.
-            </p>
-            <p>
-              Pinch in to sculpt the world, then pinch back out to paint. In a
-              free drawing, tilt the phone to aim. Brushes run from a pen and a
-              ribbon to clouds, stars, planets, and aurora.
-            </p>
-          </div>
-          <figure class="screen">
-            <img
-              src="./assets/editor.jpg"
-              width="1000"
-              height="2173"
-              alt="Ribbon strokes in mint, pink, blue, and orange wrapped around a sculpted globe. The brush is set to Ribbon."
-            />
-          </figure>
-        </div>
-      </section>
-
-      <section class="kept" aria-label="Library and look">
-        <div class="frame keptGrid">
-          <article>
-            <figure class="screen">
-              <img
-                src="./assets/library.jpg"
-                width="1000"
-                height="2173"
-                alt="The library. A painting titled First Light shows three crossing strokes on a dark sky."
-                decoding="async"
-              />
-            </figure>
-            <h2>Every painting, saved.</h2>
-            <p>
-              The library stays on the device. No account. Share a still when
-              you want a picture outside the app.
-            </p>
-          </article>
-          <article>
-            <figure class="screen">
-              <img
-                src="./assets/look.jpg"
-                width="1000"
-                height="2173"
-                alt="The Look panel open over a painting, with field of view, depth blur, and fisheye."
-                decoding="async"
-              />
-            </figure>
-            <h2>Sky, finish, and glow.</h2>
-            <p>
-              Field of view, depth blur, and fisheye. Change the colour, the
-              material, the light, and the sky.
-            </p>
-          </article>
+        <h1 class="logotype">Skypainter</h1>
+        <div class="strokes">
+          <canvas id="strokes" aria-hidden="true"></canvas>
         </div>
       </section>
     </main>
@@ -141,6 +47,15 @@
         </nav>
       </div>
     </footer>
-    <script src="./site.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="./strokes.js?v=34"></script>
+    <script src="./site.js?v=7"></script>
   </body>
 </html>
