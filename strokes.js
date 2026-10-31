@@ -8,82 +8,22 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 const hue = Math.random();
 document.body.style.setProperty("--hue", String(Math.round(hue * 360)));
 
-const tubes = [
-  {
-    color: shadeColor(0.92),
-    radius: 0.088,
-    from: [-1.7, 0.35, 2.05],
-    to: [1.75, -1.05, 1.88],
-    waves: [
-      { axis: 0, freq: 0.7, amp: 0.2, phase: 0.4, speed: 0.28 },
-      { axis: 1, freq: 0.95, amp: 0.22, phase: 1.4, speed: 0.22 },
-      { axis: 2, freq: 0.45, amp: 0.08, phase: 0.5, speed: 0.16 },
-    ],
-  },
-  {
-    color: shadeColor(0.74),
-    radius: 0.07,
-    from: [-1.8, -0.45, 1.15],
-    to: [1.7, 2.15, 1.02],
-    waves: [
-      { axis: 0, freq: 0.65, amp: 0.18, phase: 2.0, speed: 0.2 },
-      { axis: 1, freq: 1.0, amp: 0.16, phase: 0.5, speed: 0.34 },
-      { axis: 2, freq: 0.5, amp: 0.07, phase: 1.2, speed: 0.18 },
-    ],
-  },
-  {
-    color: shadeColor(0.56),
-    radius: 0.08,
-    from: [-1.8, 0.55, 0.06],
-    to: [1.8, -0.65, -0.06],
-    waves: [
-      { axis: 0, freq: 0.8, amp: 0.14, phase: 0.8, speed: 0.26 },
-      { axis: 1, freq: 0.62, amp: 0.32, phase: 2.2, speed: 0.3 },
-      { axis: 2, freq: 0.55, amp: 0.08, phase: 0.2, speed: 0.14 },
-    ],
-  },
-  {
-    color: shadeColor(0.4),
-    radius: 0.062,
-    from: [-1.7, -1.75, 0.38],
-    to: [1.75, 0.35, 0.26],
-    waves: [
-      { axis: 0, freq: 0.6, amp: 0.16, phase: 1.7, speed: 0.22 },
-      { axis: 1, freq: 0.9, amp: 0.26, phase: 0.3, speed: 0.36 },
-      { axis: 2, freq: 0.5, amp: 0.06, phase: 2.1, speed: 0.15 },
-    ],
-  },
-  {
-    color: shadeColor(0.24),
-    radius: 0.056,
-    from: [2.0, -0.35, -1.05],
-    to: [-2.0, 2.45, -0.9],
-    waves: [
-      { axis: 0, freq: 1.05, amp: 0.24, phase: 0.6, speed: 0.32 },
-      { axis: 1, freq: 0.7, amp: 0.16, phase: 1.8, speed: 0.24 },
-      { axis: 2, freq: 0.45, amp: 0.07, phase: 0.9, speed: 0.16 },
-    ],
-  },
-  {
-    color: shadeColor(0.1),
-    radius: 0.052,
-    from: [2.4, -2.6, -1.95],
-    to: [-2.45, 2.35, -1.78],
-    waves: [
-      { axis: 0, freq: 0.85, amp: 0.22, phase: 2.5, speed: 0.26 },
-      { axis: 1, freq: 0.75, amp: 0.18, phase: 0.7, speed: 0.3 },
-      { axis: 2, freq: 0.4, amp: 0.08, phase: 1.5, speed: 0.14 },
-    ],
-  },
-];
+// Styles echo the app brushes: pen, ribbon, helix, twin, clouds, stars.
+// Layout is rolled fresh each visit — paths, depths, and which brushes show.
+const strokeDefs = makeStrokeDefs();
 
-const PATH_SAMPLES = 40;
+const PATH_SAMPLES = 48;
 const RADIAL = 8;
+const RIBBON_SAMPLES = 56;
 const TAPER_END = 0.12;
 const CAMERA_DISTANCE = 4.6;
 const _point = new THREE.Vector3();
 const _normal = new THREE.Vector3();
 const _binormal = new THREE.Vector3();
+const _offset = new THREE.Vector3();
+const _matrix = new THREE.Matrix4();
+const _scale = new THREE.Vector3();
+const _quat = new THREE.Quaternion();
 
 async function startStrokes(canvas) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -140,18 +80,12 @@ async function startStrokes(canvas) {
   // rectangular focus box into the BokehPass depth buffer.
   const logoDepth = logoDepthMaterial(logoTexture);
 
-  const strokes = tubes.map((tube) => {
-    const curve = new StrokeCurve(tube);
-    const geometry = createTubeGeometry(curve, tube.radius);
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color().setRGB(tube.color[0], tube.color[1], tube.color[2], THREE.SRGBColorSpace),
-      roughness: 0.38,
-      metalness: 0.04,
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-    group.add(mesh);
-    return { tube, curve, mesh, geometry };
+  const strokes = strokeDefs.map((def) => {
+    const stroke = buildStroke(def);
+    group.add(stroke.root);
+    return stroke;
   });
+  const strokeMeshes = strokes.flatMap((stroke) => stroke.meshes);
 
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -182,12 +116,12 @@ async function startStrokes(canvas) {
 
     this.scene.overrideMaterial = null;
     logo.visible = true;
-    for (const stroke of strokes) stroke.mesh.visible = false;
+    for (const mesh of strokeMeshes) mesh.visible = false;
     const colorMaterial = logo.material;
     logo.material = logoDepth;
     renderer.render(this.scene, this.camera);
     logo.material = colorMaterial;
-    for (const stroke of strokes) stroke.mesh.visible = true;
+    for (const mesh of strokeMeshes) mesh.visible = true;
     sky.visible = true;
 
     this.uniforms.tColor.value = readBuffer.texture;
@@ -211,11 +145,7 @@ async function startStrokes(canvas) {
   let running = true;
 
   function rebuildStrokes() {
-    for (const stroke of strokes) {
-      stroke.curve.elapsed = 0;
-      stroke.curve.aspect = aspect;
-      updateTubeGeometry(stroke.geometry, stroke.curve, stroke.tube.radius);
-    }
+    for (const stroke of strokes) stroke.rebuild(aspect);
   }
 
   function resize() {
@@ -275,9 +205,118 @@ async function startStrokes(canvas) {
   });
 }
 
-function createTubeGeometry(curve, radius) {
+function paintMaterial(color, extras = {}) {
+  return new THREE.MeshStandardMaterial({
+    color: new THREE.Color().setRGB(color[0], color[1], color[2], THREE.SRGBColorSpace),
+    roughness: extras.roughness ?? 0.38,
+    metalness: extras.metalness ?? 0.04,
+    emissive: extras.emissive ?? new THREE.Color(0x000000),
+    emissiveIntensity: extras.emissiveIntensity ?? 0,
+    transparent: extras.transparent ?? false,
+    opacity: extras.opacity ?? 1,
+    side: extras.side ?? THREE.FrontSide,
+    depthWrite: extras.depthWrite ?? true,
+  });
+}
+
+function buildStroke(def) {
+  const curve = new StrokeCurve(def);
+  const root = new THREE.Group();
+  const meshes = [];
+
+  if (def.style === "ribbon") {
+    const geometry = createRibbonGeometry(curve, def.width, def.thickness);
+    const mesh = new THREE.Mesh(geometry, paintMaterial(def.color, { side: THREE.DoubleSide, roughness: 0.45 }));
+    root.add(mesh);
+    meshes.push(mesh);
+    return {
+      root,
+      meshes,
+      rebuild(aspect) {
+        curve.aspect = aspect;
+        updateRibbonGeometry(geometry, curve, def.width, def.thickness);
+      },
+    };
+  }
+
+  if (def.style === "cloud" || def.style === "stars") {
+    const count = def.count;
+    const sphere = new THREE.SphereGeometry(1, 12, 10);
+    const material = paintMaterial(def.color, {
+      roughness: def.style === "stars" ? 0.2 : 0.55,
+      metalness: def.style === "stars" ? 0.35 : 0.02,
+      emissive: def.style === "stars" ? new THREE.Color().setRGB(def.color[0], def.color[1], def.color[2], THREE.SRGBColorSpace) : undefined,
+      emissiveIntensity: def.style === "stars" ? 0.35 : 0,
+    });
+    const instanced = new THREE.InstancedMesh(sphere, material, count);
+    instanced.frustumCulled = false;
+    root.add(instanced);
+    meshes.push(instanced);
+    return {
+      root,
+      meshes,
+      rebuild(aspect) {
+        curve.aspect = aspect;
+        placeSpheres(
+          instanced,
+          curve,
+          def.radius,
+          count,
+          def.style === "stars" ? 0.55 : 1,
+          def.seed ?? 1,
+        );
+      },
+    };
+  }
+
+  if (def.style === "helix" || def.style === "twin") {
+    const strands = [-1, 1].map((sign) => {
+      const geometry = createTubeGeometry();
+      const mesh = new THREE.Mesh(geometry, paintMaterial(def.color));
+      root.add(mesh);
+      meshes.push(mesh);
+      return { geometry, sign };
+    });
+    return {
+      root,
+      meshes,
+      rebuild(aspect) {
+        curve.aspect = aspect;
+        for (const strand of strands) {
+          updateTubeGeometry(strand.geometry, curve, def.radius, (t, frames, i) => {
+            const angle = def.style === "helix" ? t * Math.PI * 2 * def.twists + (strand.sign < 0 ? Math.PI : 0) : Math.PI * 0.5;
+            const amount = def.spread * endTaper(t);
+            if (def.style === "twin") {
+              _offset.copy(frames.binormals[i]).multiplyScalar(strand.sign * amount);
+            } else {
+              _offset
+                .copy(frames.normals[i])
+                .multiplyScalar(Math.cos(angle) * amount)
+                .addScaledVector(frames.binormals[i], Math.sin(angle) * amount);
+            }
+            return _offset;
+          });
+        }
+      },
+    };
+  }
+
+  const geometry = createTubeGeometry();
+  const mesh = new THREE.Mesh(geometry, paintMaterial(def.color));
+  root.add(mesh);
+  meshes.push(mesh);
+  return {
+    root,
+    meshes,
+    rebuild(aspect) {
+      curve.aspect = aspect;
+      updateTubeGeometry(geometry, curve, def.radius);
+    },
+  };
+}
+
+function createTubeGeometry() {
   const geometry = new THREE.BufferGeometry();
-  const frames = curve.computeFrenetFrames(PATH_SAMPLES, false);
   const verts = (PATH_SAMPLES + 1) * RADIAL;
   const positions = new Float32Array(verts * 3);
   const normals = new Float32Array(verts * 3);
@@ -298,8 +337,28 @@ function createTubeGeometry(curve, radius) {
   geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
   geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
   geometry.setIndex(indices);
-  geometry.userData.frames = frames;
-  updateTubeGeometry(geometry, curve, radius);
+  return geometry;
+}
+
+function createRibbonGeometry(curve, width, thickness) {
+  const geometry = new THREE.BufferGeometry();
+  const rings = RIBBON_SAMPLES + 1;
+  const positions = new Float32Array(rings * 4 * 3);
+  const normals = new Float32Array(rings * 4 * 3);
+  const uvs = new Float32Array(rings * 4 * 2);
+  const indices = [];
+  for (let i = 0; i < RIBBON_SAMPLES; i++) {
+    const a = i * 4;
+    indices.push(a, a + 1, a + 5, a, a + 5, a + 4);
+    indices.push(a + 1, a + 2, a + 6, a + 1, a + 6, a + 5);
+    indices.push(a + 2, a + 3, a + 7, a + 2, a + 7, a + 6);
+    indices.push(a + 3, a, a + 4, a + 3, a + 4, a + 7);
+  }
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
+  geometry.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  updateRibbonGeometry(geometry, curve, width, thickness);
   return geometry;
 }
 
@@ -316,7 +375,7 @@ function endTaper(t) {
   return 1;
 }
 
-function updateTubeGeometry(geometry, curve, radius) {
+function updateTubeGeometry(geometry, curve, radius, offsetAt) {
   const frames = curve.computeFrenetFrames(PATH_SAMPLES, false);
   const positions = geometry.attributes.position.array;
   const normals = geometry.attributes.normal.array;
@@ -326,6 +385,7 @@ function updateTubeGeometry(geometry, curve, radius) {
     const t = i / PATH_SAMPLES;
     const girth = radius * endTaper(t);
     curve.getPoint(t, _point);
+    if (offsetAt) _point.add(offsetAt(t, frames, i));
     _normal.copy(frames.normals[i]);
     _binormal.copy(frames.binormals[i]);
     for (let j = 0; j < RADIAL; j++) {
@@ -354,24 +414,81 @@ function updateTubeGeometry(geometry, curve, radius) {
   geometry.computeBoundingSphere();
 }
 
+function updateRibbonGeometry(geometry, curve, width, thickness) {
+  const frames = curve.computeFrenetFrames(RIBBON_SAMPLES, false);
+  const positions = geometry.attributes.position.array;
+  const normals = geometry.attributes.normal.array;
+  const uvs = geometry.attributes.uv.array;
+
+  for (let i = 0; i <= RIBBON_SAMPLES; i++) {
+    const t = i / RIBBON_SAMPLES;
+    const taper = endTaper(t);
+    const halfW = (width * 0.5) * taper;
+    const halfT = (thickness * 0.5) * taper;
+    curve.getPoint(t, _point);
+    _normal.copy(frames.normals[i]);
+    _binormal.copy(frames.binormals[i]);
+    const corners = [
+      [-halfW, -halfT],
+      [halfW, -halfT],
+      [halfW, halfT],
+      [-halfW, halfT],
+    ];
+    for (let c = 0; c < 4; c++) {
+      const idx = (i * 4 + c) * 3;
+      positions[idx] = _point.x + _binormal.x * corners[c][0] + _normal.x * corners[c][1];
+      positions[idx + 1] = _point.y + _binormal.y * corners[c][0] + _normal.y * corners[c][1];
+      positions[idx + 2] = _point.z + _binormal.z * corners[c][0] + _normal.z * corners[c][1];
+      normals[idx] = _normal.x;
+      normals[idx + 1] = _normal.y;
+      normals[idx + 2] = _normal.z;
+      const uv = (i * 4 + c) * 2;
+      uvs[uv] = c < 2 ? 0 : 1;
+      uvs[uv + 1] = t;
+    }
+  }
+
+  geometry.attributes.position.needsUpdate = true;
+  geometry.attributes.normal.needsUpdate = true;
+  geometry.attributes.uv.needsUpdate = true;
+  geometry.computeBoundingSphere();
+}
+
+function placeSpheres(instanced, curve, radius, count, sizeScale, seed = 1) {
+  const frames = curve.computeFrenetFrames(count - 1, false);
+  for (let i = 0; i < count; i++) {
+    const t = count === 1 ? 0.5 : i / (count - 1);
+    const taper = endTaper(t);
+    const size = radius * taper * sizeScale * (0.45 + 0.55 * hash01(seed, i, 1));
+    curve.getPoint(t, _point);
+    const jitter = radius * (0.35 + 0.55 * hash01(seed, i, 2)) * taper;
+    _point.addScaledVector(frames.normals[i], (hash01(seed, i, 3) * 2 - 1) * jitter);
+    _point.addScaledVector(frames.binormals[i], (hash01(seed, i, 4) * 2 - 1) * jitter);
+    _scale.set(size, size, size);
+    _quat.identity();
+    _matrix.compose(_point, _quat, _scale);
+    instanced.setMatrixAt(i, _matrix);
+  }
+  instanced.instanceMatrix.needsUpdate = true;
+  instanced.computeBoundingSphere();
+}
+
 class StrokeCurve extends THREE.Curve {
-  constructor(tube) {
+  constructor(def) {
     super();
-    this.tube = tube;
-    this.elapsed = 0;
+    this.def = def;
     this.aspect = 1;
   }
 
   getPoint(t, target = new THREE.Vector3()) {
-    const from = this.tube.from;
-    const to = this.tube.to;
+    const from = this.def.from;
+    const to = this.def.to;
     const point = [
       from[0] + (to[0] - from[0]) * t,
       from[1] + (to[1] - from[1]) * t,
       from[2] + (to[2] - from[2]) * t,
     ];
-    for (const wave of this.tube.waves) {
-      // Elapsed stays frozen at 0 so paths are static after build.
+    for (const wave of this.def.waves) {
       point[wave.axis] += Math.sin(t * Math.PI * 2 * wave.freq + wave.phase) * wave.amp;
     }
     return target.set(point[0] * this.aspect, point[1], point[2]);
@@ -483,6 +600,164 @@ function shadeColor(step) {
   const saturation = 0.46 + 0.28 * Math.sin(step * Math.PI);
   const lightness = 0.32 + step * 0.5;
   return hslToRgb(hue, saturation, lightness);
+}
+
+function makeStrokeDefs() {
+  const styles = ["tube", "ribbon", "helix", "twin", "cloud", "stars"];
+  const extras = ["tube", "ribbon", "cloud", "stars"];
+  const count = 5 + Math.floor(Math.random() * 3);
+  const picked = shuffle(styles).slice(0, Math.min(count, styles.length));
+  while (picked.length < count) picked.push(pick(extras));
+
+  // Depth bands from near (camera) to far — shuffled so style↔depth changes.
+  const depths = shuffle(
+    Array.from({ length: picked.length }, (_, i) => {
+      const t = picked.length === 1 ? 0.5 : i / (picked.length - 1);
+      return lerp(2.15, -2.05, t) + rand(-0.12, 0.12);
+    }),
+  );
+  const shades = shuffle(
+    Array.from({ length: picked.length }, (_, i) => {
+      const t = picked.length === 1 ? 0.55 : i / (picked.length - 1);
+      return 0.1 + t * 0.82 + rand(-0.04, 0.04);
+    }),
+  );
+
+  return shuffle(picked).map((style, i) => makeStrokeDef(style, depths[i], shades[i]));
+}
+
+function makeStrokeDef(style, depth, shade) {
+  const ends = randomEndpoints(depth);
+  const waves = randomWaves();
+  const color = shadeColor(shade);
+  const seed = Math.floor(Math.random() * 1e9);
+
+  if (style === "ribbon") {
+    return {
+      style,
+      color,
+      seed,
+      width: rand(0.14, 0.3),
+      thickness: rand(0.008, 0.02),
+      ...ends,
+      waves,
+    };
+  }
+
+  if (style === "helix") {
+    return {
+      style,
+      color,
+      seed,
+      radius: rand(0.028, 0.048),
+      spread: rand(0.08, 0.15),
+      twists: rand(2.2, 4.4),
+      ...ends,
+      waves,
+    };
+  }
+
+  if (style === "twin") {
+    return {
+      style,
+      color,
+      seed,
+      radius: rand(0.03, 0.05),
+      spread: rand(0.06, 0.13),
+      ...ends,
+      waves,
+    };
+  }
+
+  if (style === "cloud") {
+    return {
+      style,
+      color,
+      seed,
+      radius: rand(0.06, 0.11),
+      count: 16 + Math.floor(Math.random() * 14),
+      ...ends,
+      waves,
+    };
+  }
+
+  if (style === "stars") {
+    return {
+      style,
+      color,
+      seed,
+      radius: rand(0.022, 0.04),
+      count: 20 + Math.floor(Math.random() * 18),
+      ...ends,
+      waves,
+    };
+  }
+
+  return {
+    style: "tube",
+    color,
+    seed,
+    radius: rand(0.055, 0.1),
+    ...ends,
+    waves,
+  };
+}
+
+function randomEndpoints(depth) {
+  const side = Math.random() < 0.5 ? 1 : -1;
+  const fromX = side * rand(1.55, 2.55);
+  const toX = -side * rand(1.55, 2.55);
+  let fromY = rand(-2.35, 2.15);
+  let toY = rand(-2.15, 2.45);
+  if (Math.abs(toY - fromY) < 0.95) {
+    toY = fromY + (Math.random() < 0.5 ? -1 : 1) * rand(1.05, 2.4);
+  }
+  // Flip orientation sometimes so strokes don't all read left→right.
+  if (Math.random() < 0.5) {
+    return {
+      from: [toX, toY, depth + rand(-0.16, 0.16)],
+      to: [fromX, fromY, depth + rand(-0.16, 0.16)],
+    };
+  }
+  return {
+    from: [fromX, fromY, depth + rand(-0.16, 0.16)],
+    to: [toX, toY, depth + rand(-0.16, 0.16)],
+  };
+}
+
+function randomWaves() {
+  return [0, 1, 2].map((axis) => ({
+    axis,
+    freq: rand(0.32, 1.2),
+    amp: axis === 2 ? rand(0.035, 0.11) : rand(0.08, 0.34),
+    phase: rand(0, Math.PI * 2),
+  }));
+}
+
+function rand(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function pick(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function shuffle(list) {
+  const next = list.slice();
+  for (let i = next.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
+}
+
+function hash01(seed, i, channel) {
+  const n = Math.sin(seed * 0.0013 + i * 12.9898 + channel * 78.233) * 43758.5453;
+  return n - Math.floor(n);
 }
 
 function hslToRgb(h, s, l) {
