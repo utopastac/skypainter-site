@@ -1,13 +1,20 @@
 :root {
-  --ink: #f4efe8;
-  --muted: #b7c0d4;
-  --line: color-mix(in srgb, #d7e4f8 18%, transparent);
-  --bg: #070b16;
-  --bg-rise: #1a2748;
-  --card: color-mix(in srgb, #121a30 82%, transparent);
+  color-scheme: dark;
+  --ink: #ffffff;
+  --ink-dim: rgba(255, 255, 255, 0.65);
+  --muted: rgba(255, 255, 255, 0.65);
+  --line: rgba(255, 255, 255, 0.18);
+  --bg: #000000;
+  --bg-rise: #111111;
+  --card: rgba(8, 8, 8, 0.92);
   --dawn: #f3c2a0;
   --sky: #9ec0ef;
-  --accent: #d7e4f8;
+  --accent: #34dba0;
+  --glass: rgba(0, 0, 0, 0.45);
+  --glass-strong: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --gap: 8px;
+  --icon: 44px;
   --space-xs: 0.35rem;
   --space-s: 0.6rem;
   --space-m: 1rem;
@@ -18,14 +25,21 @@
   --radius: 1.25rem;
   --page-pad: clamp(1.25rem, 4vw, 2.5rem);
   --content: 68rem;
-  --font: "Instrument Sans", system-ui, sans-serif;
+  --font: "SF Pro Mono", "SF Mono", ui-monospace, Menlo, monospace;
   --measure: 40rem;
+  font-family: var(--font);
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  font-family: inherit;
+  font-weight: inherit;
 }
 
 html {
@@ -42,9 +56,9 @@ body {
     linear-gradient(180deg, var(--bg-rise), var(--bg) 42%);
   font-family: var(--font);
   font-size: 1.0625rem;
-  font-weight: 450;
+  font-weight: 400;
   line-height: 1.5;
-  letter-spacing: -0.011em;
+  letter-spacing: 0;
 }
 
 img {
@@ -93,8 +107,8 @@ a {
   align-items: center;
   gap: 0.7rem;
   color: var(--ink);
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  letter-spacing: 0;
   text-decoration: none;
 
   &:hover {
@@ -140,7 +154,7 @@ a {
     margin: 0;
     max-width: 12ch;
     font-size: clamp(2.6rem, 7vw, 4.4rem);
-    font-weight: 560;
+    font-weight: 400;
     line-height: 0.98;
     letter-spacing: -0.045em;
     background: linear-gradient(115deg, var(--dawn) 8%, var(--ink) 42%, var(--sky) 88%);
@@ -154,7 +168,7 @@ a {
   margin: 0;
   color: var(--dawn);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -188,7 +202,7 @@ a {
   & h2 {
     margin: 0 0 var(--space-xs);
     font-size: 1.15rem;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: -0.03em;
   }
 
@@ -212,7 +226,7 @@ a {
   & h1 {
     margin: 0 0 var(--space-s);
     font-size: clamp(2.2rem, 5vw, 3.2rem);
-    font-weight: 560;
+    font-weight: 400;
     letter-spacing: -0.04em;
     line-height: 1;
   }
@@ -220,7 +234,7 @@ a {
   & h2 {
     margin: var(--space-xl) 0 var(--space-s);
     font-size: 1.2rem;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: -0.02em;
   }
 
@@ -231,7 +245,7 @@ a {
 
   & strong {
     color: var(--ink);
-    font-weight: 600;
+    font-weight: 400;
   }
 
   & ul {
@@ -254,32 +268,51 @@ a {
   margin-top: var(--space-l);
 }
 
+/* Matches skypainter-web `.glass-pill`. */
+.glass-pill,
 .button {
+  appearance: none;
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
-  padding: 0.55rem 1rem;
-  border: 1px solid var(--line);
+  justify-content: center;
+  gap: 6px;
+  height: var(--icon);
+  min-height: var(--icon);
+  padding: 0 18px;
+  border: 0;
   border-radius: 999px;
-  background: var(--ink);
-  color: var(--bg);
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
+  background: var(--glass);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--glass-border);
+  backdrop-filter: blur(18px) saturate(0.6);
+  -webkit-backdrop-filter: blur(18px) saturate(0.6);
+  font: 400 12px/1 var(--font);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.16s ease, color 0.16s ease;
 
   &:hover {
-    color: var(--bg);
-    background: var(--dawn);
+    color: var(--ink);
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
   }
 
   &.secondary {
     background: transparent;
-    color: var(--ink);
 
     &:hover {
-      color: var(--dawn);
-      background: transparent;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.08);
     }
   }
 }

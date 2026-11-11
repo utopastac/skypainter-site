@@ -4,7 +4,7 @@ Home, privacy, support, and the [web app](https://github.com/utopastac/skypainte
 
 ## Stack
 
-Plain HTML / CSS / JS for marketing pages. Nested CSS with variables. Instrument Sans via Google Fonts. The playable web build lives in `/web/` (Vite + Three.js).
+Plain HTML / CSS / JS for marketing pages. Nested CSS with variables. SF Pro Mono (system mono fallbacks). The playable web build lives in `/web/` (Vite + Three.js).
 
 ## Local preview
 
