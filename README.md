@@ -42,5 +42,5 @@ Set the real App Store ID in `site.js` (`APP_STORE_URL`) when the iOS listing go
 
 ## Assets
 
-- `assets/app-icon-64.png` and `app-icon-256.png` — from the Skypainter iOS App Icon
+- `assets/favicon-32.png`, `app-icon-64.png`, `apple-touch-icon.png`, `app-icon-256.png` — from the iOS `AppIcon.appiconset`
 - `web/` — built output from skypainter-web (do not edit by hand)
