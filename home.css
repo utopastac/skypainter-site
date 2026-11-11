@@ -93,3 +93,69 @@ body.home {
   border: 0;
 }
 
+.ctaRow {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: max(7.25rem, calc(env(safe-area-inset-bottom, 0px) + 6.25rem));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.cta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  min-width: 7.75rem;
+  min-height: 3.15rem;
+  padding: 0.55rem 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--cream) 38%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, #1a0f12 42%, transparent);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  color: var(--cream);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-decoration: none;
+  text-shadow: 0 1px 10px rgb(90 30 48 / 35%);
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+
+  &:hover {
+    color: var(--cream);
+    border-color: color-mix(in srgb, var(--cream) 62%, transparent);
+    background: color-mix(in srgb, #1a0f12 58%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 3px;
+  }
+}
+
+.ctaLabel {
+  display: block;
+}
+
+.ctaMeta {
+  display: block;
+  color: color-mix(in srgb, var(--cream) 72%, transparent);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ctaSoon {
+  opacity: 0.92;
+}
+
